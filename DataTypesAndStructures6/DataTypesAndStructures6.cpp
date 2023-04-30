@@ -5,8 +5,8 @@
 using namespace std;
 
 int* getmatrixfromfile(ifstream* file, int countofnodes);
-void matrixoutput(int* arr, int countofnodes);
-void matrixtofile(int* arr, int countofnodes, ofstream* file);
+void matrixoutput(int* arr, int countofnodes, ostream* stream);
+int countofways(int *arr, int countofnodes, int nodex, int nodey);
 
 const int N = 6;
 
@@ -19,13 +19,13 @@ int main()
 	arr = getmatrixfromfile(&inputfile, N);
 	inputfile.close();
 	cout << "Полученная матрица смежности:" << endl;
-	matrixoutput(arr, N);
+	matrixoutput(arr, N, &cout);
 	cout << "\nВведите номер первого узла: ";
 	cin >> nodex;
 	cout << "Введите номер второго узла: ";
 	cin >> nodey;
 	ofstream outputfile("output.dat");
-	matrixtofile(arr, N, &outputfile);
+	matrixoutput(arr, N, &outputfile);
 	outputfile.close();
 	return 0;
 }
@@ -43,29 +43,7 @@ int* getmatrixfromfile(ifstream* file, int countofnodes) {
 	return arr;
 }
 
-void matrixoutput(int* arr, int countofnodes) {
-	int i, j = 0, flag = 0, k = 1;
-	cout << " ";
-	for (i = 0; i < countofnodes; i++)
-		cout << " " << i + 1;
-	cout << endl;
-	for (i = 0; i < countofnodes * countofnodes; i++) {
-		if (!flag) {
-			cout << k << " ";
-			k++;
-			flag = 1;
-		}
-		cout << *(arr + i) << " ";
-		j++;
-		if (j == countofnodes) {
-			cout << endl;
-			j = 0;
-			flag = 0;
-		}
-	}
-}
-
-void matrixtofile(int* arr, int countofnodes, ofstream* file) {
+void matrixoutput(int* arr, int countofnodes, ostream* file) {
 	int i, j = 0, flag = 0, k = 1;
 	*file << " ";
 	for (i = 0; i < countofnodes; i++)
@@ -85,4 +63,10 @@ void matrixtofile(int* arr, int countofnodes, ofstream* file) {
 			flag = 0;
 		}
 	}
+}
+
+int countofways(int* arr, int countofnodes, int nodex, int nodey) {
+	int count = 0, *ways, i = nodex - 1, j;
+	ways = new int[countofnodes];
+	return count;
 }
