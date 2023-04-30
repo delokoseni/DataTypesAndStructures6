@@ -72,12 +72,10 @@ void matrixoutput(int** arr, int countofnodes, ostream* file) {
 int countofways(int **arr, int countofnodes, int nodex, int nodey) {
 	int count = 0, i, j;
 	i = nodex - 1;
-	if (nodex == nodey)
-		return 0;
 	if (nodex > countofnodes || nodey > countofnodes)
 		return -1;
 	for (j = 0; j < countofnodes; j++) {
-		if (arr[i][j] == 1)
+		if (arr[i][j] == 1 && i != j)
 			if (j == nodey - 1)
 				count++;
 			else
