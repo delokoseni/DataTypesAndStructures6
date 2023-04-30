@@ -29,9 +29,6 @@ int main()
 	ofstream outputfile("output.dat");
 	matrixoutput(arr, N, &outputfile);
 	outputfile.close();
-	for (i = 0; i < N; i++)
-		for (int j = 0; j < N; j++)
-			cout << arr[i][j];
 	for(i = 0; i < N; i++)
 		delete[] *(arr + i);
 	delete[] arr;
@@ -41,18 +38,13 @@ int main()
 int** getmatrixfromfile(ifstream* file, int countofnodes) {
 	if (!file->is_open())
 		return NULL;
-	int i = 0, j = 0, **arr;
+	int i, j, **arr;
 	arr = new int*[countofnodes];
 	for(i = 0; i < countofnodes; i++)
 		*(arr + i) = new int[countofnodes];
-	while (i < countofnodes && !file->eof()) {
-		while (j < countofnodes && !file->eof()) {
+	for (i = 0; i < countofnodes && !file->eof(); i++)
+		for (j = 0; j < countofnodes && !file->eof(); j++)
 			*file >> arr[i][j];
-			j++;
-		}
-		i++;
-	}
-	cout << endl;
 	return arr;
 }
 
