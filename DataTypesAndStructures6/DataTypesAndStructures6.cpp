@@ -28,6 +28,8 @@ int main()
 	cin >> nodey;
 	ofstream outputfile("output.dat");
 	matrixoutput(arr, N, &outputfile);
+	cout << "Количество путей из узла " << nodex << " в узел " << nodey << ": ";
+	cout << countofways(arr, N, nodex, nodey);
 	outputfile.close();
 	for(i = 0; i < N; i++)
 		delete[] *(arr + i);
@@ -64,7 +66,15 @@ void matrixoutput(int** arr, int countofnodes, ostream* file) {
 }
 
 int countofways(int **arr, int countofnodes, int nodex, int nodey) {
-	int count = 0, *ways, i = nodex - 1, j;
+	int count = 0, *ways, i, j;
 	ways = new int[countofnodes];
+	i = nodex - 1;
+	for (j = 0; j < countofnodes; j++) {
+		if (arr[i][j] == 1)
+			if (j == nodey - 1)
+				count++;
+			else
+				count += countofways(arr, countofnodes, j+1, nodey);
+	}
 	return count;
 }
