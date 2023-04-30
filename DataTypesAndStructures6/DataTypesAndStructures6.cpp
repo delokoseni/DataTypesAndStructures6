@@ -4,39 +4,41 @@
 
 using namespace std;
 
-int** getmatrixfromfile(ifstream* file, int countofnodes);
-void matrixoutput(int **arr, int countofnodes, ostream* stream);
-int countofways(int **arr, int countofnodes, int nodex, int nodey);
+int** getmatrixfromfile(ifstream* file, int countofnodes);	//Функция записи из файла
+int countofways(int** arr, int countofnodes, int nodex, int nodey);	//Функция поиска количества путей
+void matrixoutput(int **arr, int countofnodes, ostream* stream);	//Функция вывода матрицы
+void matrixtofile(int** arr, int countofnodes, ostream* stream, int nodex, int nodey);	//Функция записи результатов в файл
 
-const int N = 6;
+const int N = 6;	//Размерность матрицы
 
 int main()
 {
 	setlocale(LC_ALL, "russian");
 	int **arr, nodex, nodey, i;
-	arr = new int*[N];
+	arr = new int*[N];		//Выделение памяти под матрицу
 	for (i = 0; i < N; i++)
 		*(arr + i) = new int[N];
 	ifstream inputfile("input.dat");
-	arr = getmatrixfromfile(&inputfile, N);
+	arr = getmatrixfromfile(&inputfile, N);		//Получение значений в матрицу из файла
 	inputfile.close();
 	cout << "Полученная матрица смежности:" << endl;
-	matrixoutput(arr, N, &cout);
+	matrixoutput(arr, N, &cout);	//Вывод полученной матрицы
 	cout << "\nВведите номер первого узла: ";
-	cin >> nodex;
+	cin >> nodex;	//Ввод узла из которого ищем пути
 	cout << "Введите номер второго узла: ";
-	cin >> nodey;
-	ofstream outputfile("output.dat");
-	matrixoutput(arr, N, &outputfile);
+	cin >> nodey;	//Ввод узла, в который ищем пути
 	cout << "Количество путей из узла " << nodex << " в узел " << nodey << ": ";
-	cout << countofways(arr, N, nodex, nodey);
+	cout << countofways(arr, N, nodex, nodey);	//Поиск количества путей из nodex в nodey
+	ofstream outputfile("output.dat", ios::app); //Файл открыт на дозапись
+	matrixtofile(arr, N, &outputfile, nodex, nodey);
 	outputfile.close();
-	for(i = 0; i < N; i++)
+	for(i = 0; i < N; i++)	//Очистка памяти из под матрицы
 		delete[] *(arr + i);
 	delete[] arr;
 	return 0;
 }
 
+//Функция записи из файла
 int** getmatrixfromfile(ifstream* file, int countofnodes) {
 	if (!file->is_open())
 		return NULL;
@@ -50,6 +52,7 @@ int** getmatrixfromfile(ifstream* file, int countofnodes) {
 	return arr;
 }
 
+//Функция вывода матрицы
 void matrixoutput(int** arr, int countofnodes, ostream* file) {
 	int i, j;
 	*file << " ";
@@ -65,10 +68,14 @@ void matrixoutput(int** arr, int countofnodes, ostream* file) {
 	}
 }
 
+//Функция поиска количества путей
 int countofways(int **arr, int countofnodes, int nodex, int nodey) {
-	int count = 0, *ways, i, j;
-	ways = new int[countofnodes];
+	int count = 0, i, j;
 	i = nodex - 1;
+	if (nodex == nodey)
+		return 0;
+	if (nodex > countofnodes || nodey > countofnodes)
+		return -1;
 	for (j = 0; j < countofnodes; j++) {
 		if (arr[i][j] == 1)
 			if (j == nodey - 1)
@@ -77,4 +84,12 @@ int countofways(int **arr, int countofnodes, int nodex, int nodey) {
 				count += countofways(arr, countofnodes, j+1, nodey);
 	}
 	return count;
+}
+
+//Функция записи результатов в файл
+void matrixtofile(int** arr, int countofnodes, ostream* stream, int nodex, int nodey) {
+	matrixoutput(arr, countofnodes, stream);
+	*stream << "\nКоличество путей из узла " << nodex << " в узел " << nodey << ": ";
+	*stream << countofways(arr, N, nodex, nodey);	//Поиск количества путей из nodex в nodey
+	*stream << "\n\n";
 }
